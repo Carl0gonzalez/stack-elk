@@ -1,0 +1,130 @@
+{
+  "alerts": [
+    {
+      "name": "High Error Rate Alert",
+      "description": "Alerta cuando hay más de 5 errores en 1 hora",
+      "type": "threshold",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "range": {
+                "@timestamp": {
+                  "gte": "now-1h"
+                }
+              }
+            },
+            {
+              "term": {
+                "level": "error"
+              }
+            }
+          ]
+        }
+      },
+      "threshold": {
+        "field": "level",
+        "operator": ">",
+        "value": 5,
+        "timeWindow": "1h"
+      },
+      "actions": [
+        {
+          "type": "email",
+          "config": {
+            "to": ["admin@example.com"],
+            "subject": "🚨 Alerta: Alto índice de errores detectado",
+            "body": "Se han detectado más de 5 errores en la última hora. Revisar logs en Kibana."
+          }
+        },
+        {
+          "type": "webhook",
+          "config": {
+            "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "text": "🚨 Alerta: Alto índice de errores en la aplicación ELK Lab"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Down Alert",
+      "description": "Alerta cuando no hay logs de la aplicación por más de 5 minutos",
+      "type": "absence",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "range": {
+                "@timestamp": {
+                  "gte": "now-5m"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "timeWindow": "5m",
+      "actions": [
+        {
+          "type": "email",
+          "config": {
+            "to": ["admin@example.com"],
+            "subject": "⚠️ Alerta: Servicio no responde",
+            "body": "No se han recibido logs de la aplicación en los últimos 5 minutos."
+          }
+        }
+      ]
+    },
+    {
+      "name": "High Latency Alert",
+      "description": "Alerta cuando la latencia promedio supera 1 segundo",
+      "type": "threshold",
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "range": {
+                "@timestamp": {
+                  "gte": "now-10m"
+                }
+              }
+            },
+            {
+              "exists": {
+                "field": "duration"
+              }
+            }
+          ]
+        }
+      },
+      "threshold": {
+        "field": "duration",
+        "operator": ">",
+        "value": "1000ms",
+        "timeWindow": "10m",
+        "aggregation": "avg"
+      },
+      "actions": [
+        {
+          "type": "email",
+          "config": {
+            "to": ["admin@example.com"],
+            "subject": "🐌 Alerta: Alta latencia detectada",
+            "body": "La latencia promedio de la aplicación supera 1 segundo."
+          }
+        }
+      ]
+    }
+  ],
+  "monitoring": {
+    "enabled": true,
+    "interval": "1m",
+    "retention": "7d"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "elk-lab-app",
+  "version": "1.0.0",
+  "description": "Aplicación mínima para laboratorio ELK Stack",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "elk",
+    "logging",
+    "elasticsearch",
+    "logstash",
+    "kibana"
+  ],
+  "author": "ELK Lab",
+  "license": "MIT"
+}

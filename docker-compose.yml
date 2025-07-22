@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  # Aplicación Node.js
+  app:
+    build: .
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - NODE_ENV=production
+    networks:
+      - elk-network
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elk-network
+    restart: unless-stopped
+
+  # Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    container_name: logstash
+    volumes:
+      - ./logs:/var/log/app
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk-network
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - elk-network
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+volumes:
+  elasticsearch-data:
+    driver: local
+
+networks:
+  elk-network:
+    driver: bridge
