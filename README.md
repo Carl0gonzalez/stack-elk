@@ -1,23 +1,22 @@
-# stack-elk
+# 📊 stack-elk
 
-Repositorio público del perfil **Carl0gonzalez**, documentado para dejar un punto de entrada más claro sobre su propósito y contenido.
+Repositorio de laboratorio para **Elastic Stack (ELK)**, orientado a observabilidad, análisis de logs y monitoreo.
 
----
+![ELK](https://img.shields.io/badge/ELK-observability-005571)
 
-## 📌 Objetivo
+## Descripción
 
-Entregar una descripción breve y útil del repositorio para facilitar su revisión y mantenimiento.
+El proyecto sirve como base de experimentación con herramientas de búsqueda, visualización y centralización de logs dentro de un contexto técnico o formativo.
 
-## 📁 Revisión recomendada
+## Objetivo
 
-Clona el repositorio y revisa su estructura interna para identificar el flujo técnico, académico o experimental correspondiente.
+Explorar prácticas de monitoreo y análisis operativo usando el stack ELK.
 
-```bash
-git clone git@github.com:Carl0gonzalez/stack-elk.git
-cd stack-elk
-```
+## Uso
 
-## 👤 Autor
+Revisa los archivos de configuración del entorno y levanta los servicios o componentes según el stack utilizado.
+
+## Autor
 
 **Carlo González**
 
